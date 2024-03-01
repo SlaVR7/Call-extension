@@ -1,0 +1,124 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: gray;
+}
+
+.app-container {
+  padding: 67px 63px 122px 52px;
+  width: 345px;
+  height: 600px;
+  position: relative;
+  background-image: url('/public/images/phone.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.main-btn {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  bottom: 69px;
+  left: 146px;
+  background: black;
+  box-shadow: inset  0 0 10px rgba(255, 255, 255, 0.7);
+  border-radius: 50%;
+  animation: shadowAnimation 5s infinite linear;
+  transition: box-shadow 0.3s ease, background 0.3s ease;
+  cursor: pointer;
+}
+
+.main-btn:active {
+  transform: scale(90%);
+}
+
+@keyframes shadowAnimation {
+  0% {
+    box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.7);
+  }
+  50% {
+    box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.9);
+  }
+  100% {
+    box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.7);
+  }
+}
+
+.display {
+  width: 100%;
+  height: 100%;
+  background-color: #e0efec;
+}
+
+.number-area {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 32px;
+  width: 100%;
+  height: 33%;
+}
+
+.call-buttons {
+  padding: 20px;
+  width: 100%;
+  height: 67%;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.grid-item {
+  width: 40px;
+  height: 40px;
+  margin: auto;
+  color: black;
+  padding: 5px;
+  text-align: center;
+  border-radius: 50%;
+  font-size: 22px;
+  border: 2px solid #4d8e92;
+  cursor: pointer;
+}
+
+.grid-item:hover {
+  background-color: #86ada4;
+}
+
+.grid-item:active {
+  transform: scale(90%);
+}
+
+.bottom-buttons {
+  justify-content: end;
+  gap: 25px;
+  padding: 10px;
+}
+
+.ring-button {
+  width: 40px;
+  height: 40px;
+  background-image: url("/public/images/ring-green.png");
+  background-size: contain;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.ring-button:active {
+  transform: scale(90%);
+}
+
+.delete-number {
+  width: 40px;
+  height: 40px;
+  background-image: url("/public/images/delete.png");
+  background-size: contain;
+  cursor: pointer;
+}
+
+
