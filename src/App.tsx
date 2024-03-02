@@ -1,18 +1,28 @@
 import { useState } from 'react'
 import Login from "./components/Login.tsx";
-import Phone from "./components/Phone.tsx";
+import { observer } from "mobx-react";
+import {Outlet, useLocation, useNavigate} from "react-router-dom";
 
-function App() {
-  const [auth, setAuth] = useState<boolean>(true)
+const App = observer(() => {
+  const [auth, setAuth] = useState<boolean>(true);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const mainButtonClick = () => {
+    location.pathname === '/' ? navigate('/menu') : navigate('/');
+  }
 
   return (
     <div className={'app-container'}>
       {auth ? (
-        <Phone />
-      ) : (<Login setAuth={setAuth} />)}
-      <div className={'main-btn'}></div>
+        <Outlet />
+      ) : (
+        <Login setAuth={setAuth} />
+      )}
+      <div onClick={mainButtonClick} className={'main-btn'}></div>
     </div>
-  )
-}
+  );
+});
 
-export default App
+export default App;
+

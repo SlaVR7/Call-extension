@@ -1,12 +1,16 @@
 import {Flex} from "antd";
 import React, {useState} from "react";
 import {CallNumbers} from "../lib/enum.ts";
+import Stopwatch from "../components/StopWatch.tsx";
+import DateTimeDisplay from "../components/DateTimeDisplay.tsx";
 
 const Phone = () => {
   const [number, setNumber] = useState('');
+  const [isCalling, setIsCalling] = useState(false);
+  const [isStopWatchRunning, setIsStopWatchRunning] = useState(false);
 
   const addNumber = (e:React.MouseEvent<HTMLDivElement>) => {
-    if (number.length === CallNumbers.MaxLength) return;
+    if (number.length === CallNumbers.MaxLength || (e.target as HTMLDivElement).children.length) return;
     setNumber(prevState => prevState + (e.target as HTMLDivElement).textContent)
   }
 
@@ -14,10 +18,22 @@ const Phone = () => {
     setNumber(prevState => prevState.slice(0, prevState.length - 1))
   }
 
+  const callOrEnd = () => {
+    if (isCalling) {
+      setIsStopWatchRunning(false)
+    } else {
+      if (number.length === 0) return;
+      setIsStopWatchRunning(true)
+    }
+    setIsCalling(prevState => !prevState);
+  }
+
   return (
     <div className="display">
-      <div className={'number-area'}>
-        {number}
+      <div className={'display-area'}>
+        <DateTimeDisplay />
+        <div className={'number-area'}>{number}</div>
+        {isStopWatchRunning && <Stopwatch isStopWatchRunning={isStopWatchRunning} />}
       </div>
       <div className={'call-buttons'}>
         <div onClick={addNumber} className={'grid-container'}>
@@ -35,7 +51,10 @@ const Phone = () => {
           <div className="grid-item">#</div>
         </div>
         <Flex className={'bottom-buttons'}>
-          <div className={'ring-button'}></div>
+          <div
+            style={isCalling ? { backgroundImage: 'url("/public/images/ring-end.png")' } : {}}
+            onClick={callOrEnd}
+            className={'ring-button'}></div>
           <div onClick={deleteNumber} className={'delete-number'}></div>
         </Flex>
 

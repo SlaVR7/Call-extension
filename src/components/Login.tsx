@@ -1,8 +1,8 @@
 import {FC, FormEvent, useState} from "react";
 import {LoginProps} from "../lib/interfaces.ts";
-import JsSIP from 'jssip';
-//
-const Login:FC<LoginProps> = ({setAuth}:LoginProps) => {
+// import JsSIP from 'jssip';
+//{setAuth}:LoginProps
+const Login:FC<LoginProps> = () => {
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
   const [server, setServer] = useState('');
