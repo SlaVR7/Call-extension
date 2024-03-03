@@ -1,14 +1,13 @@
 import {useEffect, useState} from "react";
 import {StopWatchProps} from "../lib/interfaces.ts";
 
-const Stopwatch = ({isStopWatchRunning}: StopWatchProps) => {
+const Stopwatch = ({setCallDuration}: StopWatchProps) => {
   const [seconds, setSeconds] = useState(0);
   const [minutes, setMinutes] = useState(0);
   const [hours, setHours] = useState(0);
 
   useEffect(() => {
-    let interval: number | undefined;
-
+    setCallDuration(`${formatTime(hours)}:${formatTime(minutes)}:${formatTime(seconds)}`);
     const tick = () => {
       setSeconds((prevSeconds) => (prevSeconds + 1) % 60);
 
@@ -21,17 +20,10 @@ const Stopwatch = ({isStopWatchRunning}: StopWatchProps) => {
       }
     };
 
-    if (isStopWatchRunning) {
-      interval = setInterval(tick, 1000);
-    } else {
-      interval && clearInterval(interval);
-      setHours(0);
-      setMinutes(0);
-      setSeconds(0);
-    }
+    let interval = setInterval(tick, 1000);
 
     return () => clearInterval(interval);
-  }, [seconds, minutes, hours, isStopWatchRunning]);
+  }, [seconds, minutes, hours]);
 
   const formatTime = (value: number) => value.toString().padStart(2, "0");
 

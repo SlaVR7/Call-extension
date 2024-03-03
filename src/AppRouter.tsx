@@ -1,14 +1,13 @@
 import * as React from 'react';
 import {
-  createBrowserRouter,
-  createRoutesFromElements,
-  Route,
-  RouterProvider,
+  Route, RouterProvider, createRoutesFromElements, createBrowserRouter,
+
 } from 'react-router-dom';
-import Phone from "./pages/Phone.tsx";
-import CallLog from "./pages/CallLog.tsx";
-import Menu from "./pages/Menu.tsx";
 import App from "./App.tsx";
+import CallLog from "./pages/CallLog.tsx";
+import Phone from "./pages/Phone.tsx";
+import Menu from "./pages/Menu.tsx";
+import Contacts from "./pages/Contacts.tsx";
 
 const AppRouter: React.FC = () => {
   const router = createBrowserRouter(
@@ -18,7 +17,9 @@ const AppRouter: React.FC = () => {
           <Route index element={<Phone />} />
           <Route path={'/menu'} element={<Menu />} />
           <Route path={'/call-log'} element={<CallLog />} />
+          <Route path={'/contacts'} element={<Contacts />} />
         </>
+        <Route path={'*'} element={<Phone />} />
       </Route>
     )
   );
