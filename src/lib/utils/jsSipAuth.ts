@@ -1,8 +1,8 @@
 import JsSIP from "jssip";
 import {SipDataProps} from "../interfaces.ts";
-import React from "react";
+import {store} from "../../store/store.ts";
 
-export const register = (sipData: SipDataProps, setIsAuthError: React.Dispatch<React.SetStateAction<boolean>>) => {
+export const register = (sipData: SipDataProps) => {
   const {server, login, password, port} = sipData;
   try {
     const socket = new JsSIP.WebSocketInterface(`wss:/${server}`);
@@ -15,9 +15,10 @@ export const register = (sipData: SipDataProps, setIsAuthError: React.Dispatch<R
 
   } catch (e) {
     console.log(e);
-    setIsAuthError(true);
+    store.updateStateData({...store.stateData, isAuthError: true});
     setTimeout(() => {
-      setIsAuthError(false);
+      store.updateStateData({...store.stateData, isAuthError: false});
     }, 1000);
   }
+  return null;
 }

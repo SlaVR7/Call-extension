@@ -1,13 +1,12 @@
-import React from "react";
+import React, {MutableRefObject} from "react";
 import {UA} from "jssip";
 
 export interface LoginProps {
   applySipData: (arg0: SipDataProps) => void;
-  isAuthError: boolean;
 }
 
 export interface StopWatchProps {
-  setCallDuration: React.Dispatch<React.SetStateAction<string>>;
+  callDuration: MutableRefObject<string>;
 }
 
 export interface CallStoreProps {
@@ -29,8 +28,7 @@ export interface SipDataProps {
 }
 
 export interface PagesProps {
-  setCurrentPage: React.Dispatch<React.SetStateAction<string>>;
-  ua: UA | undefined;
+  ua: UA | null;
 }
 
 export interface CallLogProps {
@@ -45,13 +43,20 @@ export interface ContactsProps {
 }
 
 export interface PhoneProps {
-  number: string;
-  setNumber: React.Dispatch<React.SetStateAction<string>>;
-  setPage: React.Dispatch<React.SetStateAction<string>>;
-  isCalling: boolean;
-  setIsCalling: React.Dispatch<React.SetStateAction<boolean>>;
+  ua:UA | null;
+  sipData: SipDataProps | null;
 }
 
 export interface IncomingProps {
+  ua: UA | null;
+}
+
+export interface IStateData {
+  currentPage: string;
+  auth: boolean;
+  isAuthError: boolean;
+  isIncomingCall: boolean;
+  isCalling: boolean;
   number: string;
+  isStopWatchRunning: boolean;
 }

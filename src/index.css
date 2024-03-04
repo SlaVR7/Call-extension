@@ -236,6 +236,15 @@ h1, p {
   font-size: 14px;
 }
 
+.call-log-number {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.call-log-duration {
+  font-size: 14px;
+}
+
 .incoming {
   background-image: url("/images/incoming-call.png");
 }

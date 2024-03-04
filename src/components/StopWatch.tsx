@@ -1,13 +1,13 @@
 import {useEffect, useState} from "react";
 import {StopWatchProps} from "../lib/interfaces.ts";
 
-const Stopwatch = ({setCallDuration}: StopWatchProps) => {
+const Stopwatch = ({callDuration}: StopWatchProps) => {
   const [seconds, setSeconds] = useState(0);
   const [minutes, setMinutes] = useState(0);
   const [hours, setHours] = useState(0);
 
   useEffect(() => {
-    setCallDuration(`${formatTime(hours)}:${formatTime(minutes)}:${formatTime(seconds)}`);
+    callDuration.current = `${formatTime(hours)}:${formatTime(minutes)}:${formatTime(seconds)}`;
     const tick = () => {
       setSeconds((prevSeconds) => (prevSeconds + 1) % 60);
 

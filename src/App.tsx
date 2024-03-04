@@ -9,20 +9,18 @@ import Menu from "./pages/Menu.tsx";
 import {UA} from "jssip";
 import Contacts from "./pages/Contacts.tsx";
 import CallLog from "./pages/CallLog.tsx";
+import {store} from "./store/store.ts";
 
 const App = observer(() => {
-  const [auth, setAuth] = useState<boolean>(false);
-  const [isAuthError, setIsAuthError] = useState(false);
-  const [isIncomingCall, setIsIncomingCall] = useState(false);
-  const [isCalling, setIsCalling] = useState(false);
-  const [number, setNumber] = useState('');
-  const [ua, setUa] = useState<UA | undefined>();
-
-  const [currentPage, setCurrentPage] = useState('phone');
+  const [ua, setUa] = useState<UA | null>(null);
+  const [sipData, setSipData] = useState<SipDataProps | null>(null);
+  const [session, setSession] = useState();
+  const currentPage = store.stateData.currentPage;
 
   function applySipData(sipData: SipDataProps) {
     console.log('RENDER')
-    const ua = register(sipData, setIsAuthError);
+    setSipData(sipData);
+    const ua = register(sipData);
     setUa(ua);
 
     if (ua) {
@@ -32,66 +30,74 @@ const App = observer(() => {
 
       ua.on('connected', () => {
         console.log('Соединение установлено');
-        setAuth(true);
       });
 
       ua.on('disconnected', (data) => {
         console.log('Соединение разорвано', data);
-        setAuth(false);
+        store.updateStateData({...store.stateData, auth: false});
       });
 
       ua.on('registered', () => {
         console.log('Успешная авторизация');
+        store.updateStateData({...store.stateData, auth: true});
       });
 
       ua.on('registrationFailed', (e) => {
         console.error('Ошибка авторизации', e);
-        setIsAuthError(true);
+        store.updateStateData({...store.stateData, isAuthError: true});
         setTimeout(() => {
-          setIsAuthError(false);
+          store.updateStateData({...store.stateData, isAuthError: false});
         }, 1000);
       });
 
       ua.on('unregistered', () => {
         console.log('Авторизация завершена');
-        setAuth(false);
+        store.updateStateData({...store.stateData, auth: false});
       });
 
       ua.start();
+
+      ua.on('newRTCSession', (data) => {
+        const { originator, session, request } = data;
+
+        if (originator === 'remote') {
+          setSession(session);
+          store.updateStateData({...store.stateData, isIncomingCall: true});
+          const incomingNumber = session.remote_identity.uri.user;
+          store.updateStateData({...store.stateData, number: incomingNumber});
+          store.updateStateData({...store.stateData, currentPage: 'incoming'});
+          // session.answer();
+          // session.reject();
+          console.log('Получен входящий вызов:', session);
+          console.log('INVITE запрос:', request);
+        }
+      });
     }
 
   }
 
-
-  let incomingNumber = '+795564630'; // подставить от апи
-  // Если сбрасывает чувак, передавать в IncomingCall это, чтобы завершить там звонок
-
   const mainButtonClick = () => {
-    if (isIncomingCall || isCalling || !auth) return;
+    if (store.stateData.isIncomingCall || store.stateData.isCalling || !store.stateData.auth) return;
     if (currentPage === 'phone') {
-      setCurrentPage('menu');
-    } else setCurrentPage('phone');
+      store.updateStateData({...store.stateData, currentPage: 'menu'});
+    } else store.updateStateData({...store.stateData, currentPage: 'phone'});
   }
 
   return (
     <div className={'app-container'}>
-      {auth ? (
+      {store.stateData.auth ? (
         <>
-          {currentPage === 'phone' && <Phone number={number}
-                                             setNumber={setNumber}
-                                             setPage={setCurrentPage}
-                                             isCalling={isCalling}
-                                             setIsCalling={setIsCalling}
-          />}
-          {currentPage === 'menu' && <Menu setCurrentPage={setCurrentPage} ua={ua} />}
-          {currentPage === 'contacts' && <Contacts numberFromPhone={number} setNumberFromPhone={setNumber} setCurrentPage={setCurrentPage} />}
-          {currentPage === 'incoming' && <IncomingCall number={number} />}
-          {currentPage === 'call-log' && <CallLog setNumber={setNumber} setCurrentPage={setCurrentPage} />}
+          {/* попробовать закинуть всё в mobx объектом со свойствами */}
+          {currentPage === 'phone' && <Phone ua={ua} sipData={sipData} />}
+          {currentPage === 'menu' && <Menu ua={ua} />}
+          {currentPage === 'contacts' && <Contacts />}
+          {currentPage === 'incoming' && <IncomingCall ua={ua} session={session} />}
+          {currentPage === 'call-log' && <CallLog />}
         </>
       ) : (
-        <Login applySipData={applySipData} isAuthError={isAuthError} />
+        <Login applySipData={applySipData} />
       )}
-      <div onClick={mainButtonClick} className={auth ? 'main-btn main-btn-anim' : 'main-btn'}></div>
+      <div onClick={mainButtonClick} className={store.stateData.auth ? 'main-btn main-btn-anim' : 'main-btn'}></div>
     </div>
   );
 });

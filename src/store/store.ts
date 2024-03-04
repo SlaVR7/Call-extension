@@ -1,7 +1,16 @@
 import {types} from "mobx-state-tree";
-import {CallStoreProps, ContactProps} from "../lib/interfaces.ts";
+import {CallStoreProps, ContactProps, IStateData} from "../lib/interfaces.ts";
 
 const storeModel = types.model({
+  stateData: types.model({
+    currentPage: types.string,
+    auth: types.boolean,
+    isAuthError: types.boolean,
+    isIncomingCall: types.boolean,
+    isCalling: types.boolean,
+    number: types.string,
+    isStopWatchRunning: types.boolean,
+  }),
   calls: types.array(types.model({
     number: types.string,
     duration: types.string,
@@ -24,10 +33,22 @@ const storeModel = types.model({
       const index = self.contacts.indexOf(targetStoreContact);
       self.contacts.splice(index, 1);
     }
+  },
+  updateStateData(stateData: IStateData) {
+    self.stateData = stateData;
   }
 }));
 
 export const store = storeModel.create({
   calls: [],
   contacts: [],
+  stateData: {
+    currentPage: 'phone',
+    auth: false,
+    isAuthError: false,
+    isIncomingCall: false,
+    isCalling: false,
+    number: '',
+    isStopWatchRunning: false,
+  }
 })

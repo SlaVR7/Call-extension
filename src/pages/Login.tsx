@@ -1,17 +1,19 @@
 import {FC, useEffect, useState} from "react";
 import {LoginProps} from "../lib/interfaces.ts";
 import {Button, Input, notification} from "antd";
+import {store} from "../store/store.ts";
 
-const Login:FC<LoginProps> = ({applySipData, isAuthError}) => {
+const Login:FC<LoginProps> = ({applySipData}) => {
   const [api, contextHolder] = notification.useNotification();
-  const [login, setLogin] = useState('');
-  const [password, setPassword] = useState('');
-  const [server, setServer] = useState('');
-  const [port, setPort] = useState('');
+  // поменять
+  const [login, setLogin] = useState('0336445');
+  const [password, setPassword] = useState('id49rvgNRL');
+  const [server, setServer] = useState('voip.uiscom.ru');
+  const [port, setPort] = useState('9050');
 
   useEffect(() => {
-    if (isAuthError) openNotification();
-  }, [isAuthError]);
+    if (store.stateData.isAuthError) openNotification();
+  }, [store.stateData.isAuthError]);
 
   const openNotification = () => {
     api.error({

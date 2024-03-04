@@ -1,14 +1,13 @@
 import {store} from "../store/store.ts";
 import {Flex} from "antd";
-import {CallLogProps} from "../lib/interfaces.ts";
 
-const CallLog = ({setNumber, setCurrentPage}: CallLogProps) => {
+const CallLog = () => {
   const calls = store.calls;
   const reversedCalls = [...calls].reverse();
 
   function toPhone(number: string) {
-    setNumber(number);
-    setCurrentPage('phone');
+    store.updateStateData({...store.stateData, number})
+    store.updateStateData({...store.stateData, currentPage: 'phone'});
   }
 
   return (
@@ -20,8 +19,8 @@ const CallLog = ({setNumber, setCurrentPage}: CallLogProps) => {
             <li key={index} onClick={() => toPhone(call.number)} className={'calls-item'}>
               <div className={`calls-icon ${call.type}`}></div>
               <Flex vertical align={"end"}>
-                <p className={'calls-data'}>{call.number}</p>
-                <p className={'calls-data'}>{call.duration}</p>
+                <p className={'call-log-number'}>{call.number}</p>
+                <p className={'call-log-duration'}>{call.duration}</p>
               </Flex>
             </li>
           )

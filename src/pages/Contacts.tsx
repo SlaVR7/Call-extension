@@ -2,18 +2,18 @@ import {Button, Flex, Input} from "antd";
 import {store} from "../store/store.ts";
 import React, {useEffect, useState} from "react";
 import {observer} from "mobx-react";
-import {ContactProps, ContactsProps} from "../lib/interfaces.ts";
+import {ContactProps} from "../lib/interfaces.ts";
 
-const Contacts = observer(({numberFromPhone, setNumberFromPhone, setCurrentPage}: ContactsProps) => {
+const Contacts = observer(() => {
   const contacts = store.contacts;
   const [isNewContactMenuActive, setIsNewContactMenuActive] = useState(false);
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
 
   useEffect(() => {
-    if (numberFromPhone) {
+    if (store.stateData.number) {
       setIsNewContactMenuActive(true);
-      setNumber(numberFromPhone);
+      setNumber(store.stateData.number);
     }
   }, [])
 
@@ -34,8 +34,8 @@ const Contacts = observer(({numberFromPhone, setNumberFromPhone, setCurrentPage}
   }
 
   function call(number: string) {
-    setNumberFromPhone(number);
-    setCurrentPage('phone');
+    store.updateStateData({...store.stateData, number})
+    store.updateStateData({...store.stateData, currentPage: 'phone'});
   }
 
   return (

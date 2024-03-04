@@ -1,15 +1,16 @@
 import {PagesProps} from "../lib/interfaces.ts";
+import {store} from "../store/store.ts";
 
-const Menu = ({setCurrentPage, ua}: PagesProps) => {
+const Menu = ({ua}: PagesProps) => {
   return (
     <div className={'display'}>
       <h1 className={'menu-title'}>Main menu</h1>
       <div className={'menu-container'}>
-        <div onClick={() => setCurrentPage('call-log')} className={'menu-item'}>
+        <div onClick={() => store.updateStateData({...store.stateData, currentPage: 'call-log'})} className={'menu-item'}>
           <div className={'menu-icon call-log'}></div>
           <p className={'menu-description'}>Call log</p>
         </div>
-        <div onClick={() => setCurrentPage('contacts')} className={'menu-item'}>
+        <div onClick={() => store.updateStateData({...store.stateData, currentPage: 'contacts'})} className={'menu-item'}>
           <div className={'menu-icon contacts'}></div>
           <p className={'menu-description'}>Contacts</p>
         </div>
