@@ -1,15 +1,12 @@
-import React, {MutableRefObject} from "react";
-import {UA} from "jssip";
+import { UA } from 'jssip';
+import { RTCSessionEventMap } from 'jssip/lib/RTCSession';
 
 export interface LoginProps {
   applySipData: (arg0: SipDataProps) => void;
 }
 
-export interface StopWatchProps {
-  callDuration: MutableRefObject<string>;
-}
-
 export interface CallStoreProps {
+  date: string;
   number: string;
   duration: string;
   type: string;
@@ -27,28 +24,40 @@ export interface SipDataProps {
   port: string;
 }
 
-export interface PagesProps {
-  ua: UA | null;
-}
-
-export interface CallLogProps {
-  setNumber: React.Dispatch<React.SetStateAction<string>>;
-  setCurrentPage: React.Dispatch<React.SetStateAction<string>>;
-}
-
-export interface ContactsProps {
-  numberFromPhone: string;
-  setNumberFromPhone: React.Dispatch<React.SetStateAction<string>>;
-  setCurrentPage: React.Dispatch<React.SetStateAction<string>>;
-}
-
 export interface PhoneProps {
-  ua:UA | null;
-  sipData: SipDataProps | null;
+  ua: UA | null;
+  playFailedSound: () => void;
+  playButtonsSound: () => void;
+}
+
+export interface Session {
+  remote_identity: {
+    uri: {
+      user: string;
+    };
+  };
+  on: (arg0: keyof RTCSessionEventMap, arg1: () => void) => void;
+  answer: () => void;
+}
+
+export interface SoundProps {
+  playButtonsSound: () => void;
+}
+
+export interface MainDisplayProps {
+  ua: UA | null;
+  playButtonsSound: () => void;
+}
+
+export interface NewRTCSessionData {
+  originator: string;
+  session: Session;
 }
 
 export interface IncomingProps {
   ua: UA | null;
+  session: Session | null;
+  playFailedSound: () => void;
 }
 
 export interface IStateData {
@@ -59,4 +68,6 @@ export interface IStateData {
   isCalling: boolean;
   number: string;
   isStopWatchRunning: boolean;
+  callStatus: string;
+  callDuration: string;
 }

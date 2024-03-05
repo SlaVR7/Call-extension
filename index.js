@@ -1,10 +1,10 @@
-import JsSIP from "./node_modules/jssip/lib/JsSIP.js";
+import JsSIP from './node_modules/jssip/lib/JsSIP.js';
 
 const configuration = {
   uri: 'sip:0336445@voip.uiscom.ru',
   authorization_user: '0336444',
   password: 'PLg9b5SNx_',
-  ws_servers: 'wss://voip.uiscom.ru:9050'
+  ws_servers: 'wss://voip.uiscom.ru:9050',
 };
 
 let ua;
@@ -18,8 +18,8 @@ function startCall() {
     const options = {
       mediaConstraints: { audio: true, video: false },
       pcConfig: {
-        iceServers: [{ urls: 'stun:stun.l.google.com:19302' }]
-      }
+        iceServers: [{ urls: 'stun:stun.l.google.com:19302' }],
+      },
     };
     session = ua.call('sip:0336445@voip.uiscom.ru:9050', options);
   });

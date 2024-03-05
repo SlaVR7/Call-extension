@@ -1,13 +1,14 @@
-import {useEffect, useState} from "react";
-import {StopWatchProps} from "../lib/interfaces.ts";
+import { useEffect, useState } from 'react';
+import { store } from '../store/store.ts';
 
-const Stopwatch = ({callDuration}: StopWatchProps) => {
+const Stopwatch = () => {
   const [seconds, setSeconds] = useState(0);
   const [minutes, setMinutes] = useState(0);
   const [hours, setHours] = useState(0);
 
   useEffect(() => {
-    callDuration.current = `${formatTime(hours)}:${formatTime(minutes)}:${formatTime(seconds)}`;
+    const callDuration = `${formatTime(hours)}:${formatTime(minutes)}:${formatTime(seconds)}`;
+    store.updateStateData({ ...store.stateData, callDuration });
     const tick = () => {
       setSeconds((prevSeconds) => (prevSeconds + 1) % 60);
 
@@ -25,10 +26,12 @@ const Stopwatch = ({callDuration}: StopWatchProps) => {
     return () => clearInterval(interval);
   }, [seconds, minutes, hours]);
 
-  const formatTime = (value: number) => value.toString().padStart(2, "0");
+  const formatTime = (value: number) => value.toString().padStart(2, '0');
 
   return (
-    <div className={'stopwatch'}>{formatTime(hours)}:{formatTime(minutes)}:{formatTime(seconds)}</div>
+    <div className={'stopwatch'}>
+      {formatTime(hours)}:{formatTime(minutes)}:{formatTime(seconds)}
+    </div>
   );
 };
 

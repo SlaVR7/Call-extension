@@ -1,4 +1,5 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from 'react';
+import { store } from '../store/store.ts';
 
 const DateTimeDisplay = () => {
   const [currentDateTime, setCurrentDateTime] = useState(new Date());
@@ -11,7 +12,7 @@ const DateTimeDisplay = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const formatTime = (value: number) => value.toString().padStart(2, "0");
+  const formatTime = (value: number) => value.toString().padStart(2, '0');
 
   const year = currentDateTime.getFullYear();
   const month = formatTime(currentDateTime.getMonth() + 1);
@@ -21,8 +22,13 @@ const DateTimeDisplay = () => {
 
   return (
     <div className={'date-container'}>
-      <div>{year}-{month}-{day}</div>
-      <div>{hours}:{minutes}</div>
+      <div>
+        {year}-{month}-{day}
+      </div>
+      <div>{store.stateData.callStatus}</div>
+      <div>
+        {hours}:{minutes}
+      </div>
     </div>
   );
 };

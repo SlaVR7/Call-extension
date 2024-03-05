@@ -1,71 +1,94 @@
-import {Flex} from "antd";
-import React, {useCallback, useEffect, useRef, useState} from "react";
-import {CallNumbers} from "../lib/enum.ts";
-import Stopwatch from "../components/StopWatch.tsx";
-import DateTimeDisplay from "../components/DateTimeDisplay.tsx";
-import {store} from "../store/store.ts";
-import {PhoneProps} from "../lib/interfaces.ts";
-import {observer} from "mobx-react";
+import { Flex } from 'antd';
+import React, { useCallback, useEffect } from 'react';
+import { CallNumbers } from '../lib/enum.ts';
+import Stopwatch from '../components/StopWatch.tsx';
+import { store } from '../store/store.ts';
+import { PhoneProps } from '../lib/interfaces.ts';
+import { observer } from 'mobx-react';
+import { getName } from '../lib/utils/findInStore.ts';
 
-const Phone = observer(({ua, sipData}: PhoneProps) => {
-  const [callStatus, setCallStatus] = useState('On Hook');
+const Phone = observer(({ ua, playFailedSound, playButtonsSound }: PhoneProps) => {
   const callSoundRef = React.useRef<HTMLAudioElement>(null);
-  const failedSoundRef = React.useRef<HTMLAudioElement>(null);
-  const callDuration = useRef('');
+  const numbersSoundRef = React.useRef<HTMLAudioElement>(null);
 
-  const handleKeyPress = useCallback((e: KeyboardEvent) => {
-    if (e.key === 'Enter' && !store.stateData.isCalling && store.stateData.number.length > 0) call();
-    if (e.key ==='Escape' && store.stateData.isCalling) call();
-    if (e.key === 'Backspace' && !store.stateData.isCalling) deleteNumber();
-    if (isNaN(+e.key) || store.stateData.number.length === CallNumbers.MaxLength || store.stateData.isCalling) return;
-    store.updateStateData({...store.stateData, number: store.stateData.number + e.key});
-  }, [store.stateData.number, store.stateData.isCalling]);
+  function playNumberClick() {
+    numbersSoundRef.current?.pause();
+    if (numbersSoundRef.current?.currentTime) numbersSoundRef.current.currentTime = 0;
+    numbersSoundRef.current?.play();
+  }
+
+  const handleKeyPress = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === 'Enter' && !store.stateData.isCalling && store.stateData.number.length > 0)
+        call();
+      if (e.key === 'Escape' && store.stateData.isCalling) call();
+      if (e.key === 'Backspace' && !store.stateData.isCalling) deleteNumber();
+      if (
+        isNaN(+e.key) ||
+        store.stateData.number.length === CallNumbers.MaxLength ||
+        store.stateData.isCalling
+      )
+        return;
+      playNumberClick();
+      store.updateStateData({ ...store.stateData, number: store.stateData.number + e.key });
+    },
+    [store.stateData.number, store.stateData.isCalling]
+  );
 
   useEffect(() => {
-     window.addEventListener('keydown', handleKeyPress);
+    window.addEventListener('keydown', handleKeyPress);
 
     return () => {
       window.removeEventListener('keydown', handleKeyPress);
     };
+  }, [handleKeyPress]);
 
-  }, [handleKeyPress])
-
-  const addNumber = (e:React.MouseEvent<HTMLDivElement>) => {
-    if (store.stateData.number.length === CallNumbers.MaxLength || (e.target as HTMLDivElement).children.length || store.stateData.isCalling) return;
-    store.updateStateData({...store.stateData, number: store.stateData.number + (e.target as HTMLDivElement).textContent});
-  }
+  const addNumber = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (
+      store.stateData.number.length === CallNumbers.MaxLength ||
+      (e.target as HTMLDivElement).children.length ||
+      store.stateData.isCalling
+    )
+      return;
+    playNumberClick();
+    store.updateStateData({
+      ...store.stateData,
+      number: store.stateData.number + (e.target as HTMLDivElement).textContent,
+    });
+  };
 
   const deleteNumber = () => {
     if (store.stateData.isCalling) return;
-    store.updateStateData({...store.stateData, number: store.stateData.number.slice(0, store.stateData.number.length - 1)});
-  }
+    playNumberClick();
+    store.updateStateData({
+      ...store.stateData,
+      number: store.stateData.number.slice(0, store.stateData.number.length - 1),
+    });
+  };
 
   const addContact = () => {
     if (store.stateData.isCalling) return;
-    store.updateStateData({...store.stateData, currentPage: 'contacts'});
-  }
+    playButtonsSound();
+    store.updateStateData({ ...store.stateData, currentPage: 'contacts' });
+  };
 
   function endCall() {
-    console.log('end call called')
+    console.log('end call called');
     ua?.terminateSessions();
-    store.addNumber({number: store.stateData.number, duration: callDuration.current, type: 'outgoing'});
-    store.updateStateData({...store.stateData, isStopWatchRunning: false});
-    setCallStatus('Call ended');
-    store.updateStateData({...store.stateData, number: ''});
-    store.updateStateData({...store.stateData, isCalling: false});
+    store.addNumber({
+      date: new Date().toLocaleString(),
+      number: store.stateData.number,
+      duration: store.stateData.callDuration,
+      type: 'outgoing',
+    });
+    localStorage.setItem(store.sipData.login, JSON.stringify(store.callsAndContacts));
+    store.updateStateData({ ...store.stateData, isStopWatchRunning: false });
+    store.updateStateData({ ...store.stateData, callStatus: 'Call ended' });
+    store.updateStateData({ ...store.stateData, number: '' });
+    store.updateStateData({ ...store.stateData, isCalling: false });
     setTimeout(() => {
-      setCallStatus('On Hook')
+      store.updateStateData({ ...store.stateData, callStatus: 'On Hook' });
     }, 2000);
-  }
-
-  const playFailedSound = () => {
-    failedSoundRef.current?.play();
-    setTimeout(() => {
-      failedSoundRef.current?.pause();
-      if (failedSoundRef.current?.currentTime) {
-        failedSoundRef.current.currentTime = 0;
-      }
-    }, 2500);
   }
 
   const stopCallSound = () => {
@@ -73,64 +96,60 @@ const Phone = observer(({ua, sipData}: PhoneProps) => {
     if (callSoundRef.current?.currentTime) {
       callSoundRef.current.currentTime = 0;
     }
-  }
+  };
 
   function call() {
-      if (store.stateData.number.length === 0) return;
-    store.updateStateData({...store.stateData, isCalling: true});
-      setCallStatus('Dealing...');
-      // HTML5 <video> elements in which local and remote video will be shown
-      const views = {
-        'selfView':   document.getElementById('my-video'),
-        'remoteView': document.getElementById('peer-video')
-      };
+    if (store.stateData.number.length === 0) return;
+    playButtonsSound();
+    store.updateStateData({ ...store.stateData, isCalling: true });
+    store.updateStateData({ ...store.stateData, callStatus: 'Dealing...' });
 
-      const eventHandlers = {
-        progress:   function(data){
-          console.log('progress', data)
-          callSoundRef.current?.play();
-        },
-        failed:     function(data){
-          console.log('failed', data);
-          stopCallSound();
-          playFailedSound();
-          endCall();
-        },
-        confirmed:  function(data){
-          console.log('confirmed', data);
-          stopCallSound();
-          setCallStatus('In-Call');
-          store.updateStateData({...store.stateData, isStopWatchRunning: true});
-        },
-        ended:      function(data){
-          console.log('ended', data);
-          playFailedSound();
-          endCall();
-        }
-      };
+    const eventHandlers = {
+      progress: function () {
+        console.log('progress');
+        callSoundRef.current?.play();
+      },
+      failed: function () {
+        console.log('failed');
+        stopCallSound();
+        playFailedSound();
+        endCall();
+      },
+      confirmed: function () {
+        console.log('confirmed');
+        stopCallSound();
+        store.updateStateData({ ...store.stateData, callStatus: 'In-Call' });
+        store.updateStateData({ ...store.stateData, isStopWatchRunning: true });
+      },
+      ended: function () {
+        console.log('ended');
+        playFailedSound();
+        endCall();
+      },
+    };
 
-      const options = {
-        'eventHandlers': eventHandlers,
-        'extraHeaders': [ 'X-Foo: foo', 'X-Bar: bar' ],
-        'mediaConstraints': {'audio': true, 'video': false},
-      };
+    const options = {
+      eventHandlers: eventHandlers,
+      extraHeaders: ['X-Foo: foo', 'X-Bar: bar'],
+      mediaConstraints: { audio: true, video: false },
+    };
 
-      ua?.call(`sip:${store.stateData.number}@${sipData.server}`, options);
-
-    }
-
+    ua?.call(`sip:${store.stateData.number}@${store.sipData.server}`, options);
+  }
 
   return (
-    <div className="display">
+    <>
       <audio ref={callSoundRef} src={'/sounds/ringing.mp3'} loop={true} />
-      <audio ref={failedSoundRef} src={'/sounds/failed.mp3'} />
+      <audio ref={numbersSoundRef} src={'/sounds/numbers.mp3'} />
       <div className={'display-area'}>
-        <DateTimeDisplay/>
         <div className={'number-area'}>{store.stateData.number}</div>
-        <Flex className={'stopwatch-area'}>
-          <p>{callStatus}</p>
-          {store.stateData.isStopWatchRunning && <Stopwatch callDuration={callDuration}/>}
+        <div className={'number-area-name'}>{getName(store.stateData.number)}</div>
+        {store.stateData.isStopWatchRunning &&
+          <Flex justify={'space-around'} align={'center'} className={'stopwatch-area'}>
+            <p>Call duration:</p>
+            <Stopwatch />
         </Flex>
+        }
       </div>
       <div className={'call-buttons'}>
         <div onClick={addNumber} className={'grid-container'}>
@@ -150,21 +169,14 @@ const Phone = observer(({ua, sipData}: PhoneProps) => {
         <Flex className={'bottom-buttons'}>
           <div onClick={addContact} className={'add-contact'}></div>
           {store.stateData.isCalling ? (
-            <div
-              onClick={() => ua?.terminateSessions()}
-              className={'ring-button end-button'}></div>
-
+            <div onClick={() => ua?.terminateSessions()} className={'ring-button end-button'}></div>
           ) : (
-            <div
-              onClick={call}
-              className={'ring-button'}></div>
+            <div onClick={call} className={'ring-button'}></div>
           )}
           <div onClick={deleteNumber} className={'delete-number'}></div>
-
         </Flex>
-
       </div>
-    </div>
+    </>
   );
 });
 

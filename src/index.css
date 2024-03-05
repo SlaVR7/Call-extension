@@ -1,17 +1,19 @@
 * {
   box-sizing: border-box;
+  font-family: sans-serif;
 }
 
 body {
   background: gray;
 }
 
-h1, p {
+h1,
+p {
   margin: 0;
 }
 
 .app-container {
-  padding: 67px 63px 122px 52px;
+  padding: 66px 62px 121px 51px;
   width: 345px;
   height: 600px;
   position: relative;
@@ -27,9 +29,11 @@ h1, p {
   bottom: 69px;
   left: 146px;
   background: black;
-  box-shadow: inset  0 0 10px rgba(255, 255, 255, 0.7);
+  box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.7);
   border-radius: 50%;
-  transition: box-shadow 0.3s ease, background 0.3s ease;
+  transition:
+    box-shadow 0.3s ease,
+    background 0.3s ease;
   cursor: pointer;
 }
 
@@ -56,30 +60,39 @@ h1, p {
 .display {
   width: 100%;
   height: 100%;
-  background-color: #e0efec;
+  background: linear-gradient(rgba(135, 60, 255, 0.4), rgba(135, 60, 255, 0) 80%),
+    linear-gradient(-45deg, rgba(120, 155, 255, 0.9) 25%, rgba(255, 160, 65, 0.9) 75%);
 }
 
 .display-area {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
   font-size: 32px;
   width: 100%;
-  height: 33%;
+  height: 30%;
 }
 
 .date-container {
   display: flex;
+  padding: 2px;
   justify-content: space-between;
-  margin-bottom: 40px;
-  font-size: 16px;
+  font-size: 14px;
+  background-color: rgba(255, 255, 255, 0.3);
 }
 
 .number-area {
   height: 36px;
-  margin-bottom: 30px;
   text-align: center;
 }
 
+.number-area-name {
+  text-align: center;
+  font-size: 16px;
+}
+
 .stopwatch-area {
-  justify-content: space-between;
+  margin-top: 10px;
   font-size: 16px;
 }
 
@@ -114,7 +127,7 @@ h1, p {
 }
 
 .grid-item:hover {
-  background-color: #969696;
+  background-color: rgba(255, 255, 255, 0.3);
 }
 
 .grid-item:active {
@@ -129,14 +142,14 @@ h1, p {
 .ring-button {
   width: 40px;
   height: 40px;
-  background-image: url("/images/ring-green.png");
+  background-image: url('/images/ring-green.png');
   background-size: contain;
   border-radius: 50%;
   cursor: pointer;
 }
 
 .end-button {
-  background-image: url("/images/ring-end.png");
+  background-image: url('/images/ring-end.png');
 }
 
 .ring-button:active {
@@ -146,13 +159,23 @@ h1, p {
 .delete-number {
   width: 40px;
   height: 40px;
-  background-image: url("/images/delete.png");
+  background-image: url('/images/delete.png');
   background-size: contain;
   cursor: pointer;
 }
 
 .delete-number:active {
   transform: scale(90%);
+}
+
+.main-display-container {
+  align-items: end;
+  width: 100%;
+  height: 100%;
+  padding: 10px 10px 25px 10px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
 }
 
 .menu-container {
@@ -164,6 +187,7 @@ h1, p {
 }
 
 .menu-title {
+  padding: 5px 5px 0;
   text-align: center;
   font-size: 24px;
 }
@@ -174,14 +198,19 @@ h1, p {
   font-size: 16px;
 }
 
+.small-description {
+  font-size: 13px;
+}
+
 .menu-item {
   padding: 5px;
   cursor: pointer;
-  transition-duration: .2s;
+  transition-duration: 0.2s;
+  border-radius: 5px;
 }
 
 .menu-item:hover {
-  background-color:  #969696;
+  background-color: rgba(255, 255, 255, 0.3);
 }
 
 .menu-item:active {
@@ -194,14 +223,20 @@ h1, p {
   background-size: contain;
 }
 
+.small-icon {
+  margin: 0 auto;
+  width: 30px;
+  height: 30px;
+}
+
 .call-log {
-  background-image: url("/images/call-log.png");
+  background-image: url('/images/call-log.png');
 }
 
 .calls-list {
-  height: 382px;
+  height: 305px;
   margin: 0;
-  padding: 20px;
+  padding: 10px;
   list-style-type: none;
   overflow: auto;
 }
@@ -209,14 +244,15 @@ h1, p {
 .calls-item {
   display: flex;
   justify-content: space-between;
-  padding: 10px 5px;
+  align-items: center;
+  padding: 5px;
   border-bottom: 1px solid red;
   cursor: pointer;
-  transition-duration: .2s;
+  transition-duration: 0.2s;
 }
 
 .calls-item:hover {
-  background-color: #969696;
+  background-color: rgba(255, 255, 255, 0.3);
 }
 
 .calls-item:active {
@@ -230,10 +266,16 @@ h1, p {
 
 .calls-name {
   font-weight: bold;
+  font-size: 14px;
+}
+
+.call-log-date {
+  font-size: 11px;
 }
 
 .calls-number {
-  font-size: 14px;
+  font-size: 11px;
+  font-weight: bold;
 }
 
 .call-log-number {
@@ -242,22 +284,23 @@ h1, p {
 }
 
 .call-log-duration {
-  font-size: 14px;
+  font-size: 11px;
 }
 
 .incoming {
-  background-image: url("/images/incoming-call.png");
+  background-image: url('/images/incoming-call.png');
 }
 
 .missed {
-  background-image: url("/images/missed-call.png");
+  background-image: url('/images/missed-call.png');
 }
 
 .outgoing {
-  background-image: url("/images/outgoing-call.png");
+  background-image: url('/images/outgoing-call.png');
 }
 
 .incoming-container {
+  height: 95%;
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -276,7 +319,7 @@ h1, p {
 }
 
 .ring-button-animation {
-  animation: scale .4s infinite alternate;
+  animation: scale 0.4s infinite alternate;
 }
 
 .center {
@@ -293,18 +336,18 @@ h1, p {
 }
 
 .contacts {
-  background-image: url("/images/contacts.png");
+  background-image: url('/images/contacts.png');
 }
 
 .contact-icon {
-  background-image: url("/images/contact.png");
+  background-image: url('/images/contact.png');
   background-size: contain;
 }
 
 .add-contact {
   width: 40px;
   height: 40px;
-  background-image: url("/images/addContact.png");
+  background-image: url('/images/addContact.png');
   background-size: contain;
   cursor: pointer;
 }
@@ -324,7 +367,7 @@ h1, p {
 }
 
 .new-contact-button:hover {
-  background-color: #4d8e92;
+  background-color: rgba(105, 99, 99, 0.44);
 }
 
 .new-contact-button:active {
@@ -332,7 +375,7 @@ h1, p {
 }
 
 .new-contact-form {
-  padding: 20px;
+  padding: 10px 20px;
 }
 
 .new-contact-input {
@@ -348,7 +391,7 @@ h1, p {
 }
 
 .contact-button:hover {
-  background-color: #4d8e92;
+  background-color: rgba(105, 99, 99, 0.44);
 }
 
 .login-button {
@@ -358,6 +401,6 @@ h1, p {
 }
 
 .logout {
-  background-image: url("/images/logout.png");
+  background-image: url('/images/logout.png');
   background-size: contain;
 }

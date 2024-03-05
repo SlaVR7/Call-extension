@@ -1,9 +1,9 @@
-import {FC, useEffect, useState} from "react";
-import {LoginProps} from "../lib/interfaces.ts";
-import {Button, Input, notification} from "antd";
-import {store} from "../store/store.ts";
+import { FC, useEffect, useState } from 'react';
+import { LoginProps } from '../lib/interfaces.ts';
+import { Button, Input, notification } from 'antd';
+import { store } from '../store/store.ts';
 
-const Login:FC<LoginProps> = ({applySipData}) => {
+const Login: FC<LoginProps> = ({ applySipData }) => {
   const [api, contextHolder] = notification.useNotification();
   // поменять
   const [login, setLogin] = useState('0336445');
@@ -18,15 +18,14 @@ const Login:FC<LoginProps> = ({applySipData}) => {
   const openNotification = () => {
     api.error({
       message: `Authorization error!`,
-      description:
-        'Please check the entered data',
-      placement: "top",
+      description: 'Please check the entered data',
+      placement: 'top',
     });
   };
 
   return (
-    <div className={'display'}>
-      <h1 className={'menu-title'}>Please enter your SIP data</h1>
+    <>
+      <h1 className={'menu-title'}>Enter your SIP data</h1>
       <form className={'new-contact-form'}>
         {contextHolder}
         <label>
@@ -41,41 +40,44 @@ const Login:FC<LoginProps> = ({applySipData}) => {
         </label>
         <label>
           <p>Password:</p>
-          <Input placeholder="Enter your password"
-                 className={'new-contact-input'}
-                 type="password"
-                 value={password}
-                 onChange={(e) => setPassword(e.target.value)}
+          <Input
+            placeholder="Enter your password"
+            className={'new-contact-input'}
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
         </label>
         <label>
           <p>Server:</p>
-          <Input placeholder="Enter your server"
-                 className={'new-contact-input'}
-                 type="text"
-                 value={server}
-                 onChange={(e) => setServer(e.target.value)}
+          <Input
+            placeholder="Enter your server"
+            className={'new-contact-input'}
+            type="text"
+            value={server}
+            onChange={(e) => setServer(e.target.value)}
           />
         </label>
         <label>
           <p>Port (optional):</p>
-          <Input placeholder="Enter your port"
-                 className={'new-contact-input'}
-                 type="text"
-                 value={port}
-                 onChange={(e) => setPort(e.target.value)}
+          <Input
+            placeholder="Enter your port"
+            className={'new-contact-input'}
+            type="text"
+            value={port}
+            onChange={(e) => setPort(e.target.value)}
           />
         </label>
-        <Button className={'login-button'}
-                onClick={() => applySipData({server, login, password, port})}
-                type="primary">
+        <Button
+          className={'login-button'}
+          onClick={() => applySipData({ server, login, password, port })}
+          type="primary"
+        >
           Login
         </Button>
       </form>
-    </div>
+    </>
   );
 };
 
 export default Login;
-
-
