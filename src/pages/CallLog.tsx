@@ -3,19 +3,20 @@ import { Flex } from 'antd';
 import { getName } from '../lib/utils/findInStore.ts';
 import { observer } from 'mobx-react';
 import { SoundProps } from '../lib/interfaces.ts';
+import { playButtonsSound } from '../lib/utils/sound.ts';
 
-const CallLog = observer(({ playButtonsSound }: SoundProps) => {
+const CallLog = observer(({ buttonsSoundRef }: SoundProps) => {
   const calls = store.callsAndContacts.calls;
   const reversedCalls = [...calls].reverse();
 
   function toPhone(number: string) {
-    playButtonsSound();
+    playButtonsSound(buttonsSoundRef);
     store.updateStateData({ ...store.stateData, number });
     store.updateStateData({ ...store.stateData, currentPage: 'phone' });
   }
 
   function clear() {
-    playButtonsSound();
+    playButtonsSound(buttonsSoundRef);
     store.clearCallLog();
     localStorage.setItem(store.sipData.login, JSON.stringify(store.callsAndContacts));
   }

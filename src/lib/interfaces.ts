@@ -1,8 +1,27 @@
 import { UA } from 'jssip';
 import { RTCSessionEventMap } from 'jssip/lib/RTCSession';
+import React from 'react';
 
 export interface LoginProps {
-  applySipData: (arg0: SipDataProps) => void;
+  setUa: React.Dispatch<React.SetStateAction<UA | null>>
+  setSession: React.Dispatch<React.SetStateAction<Session | null>>;
+  buttonSoundRef: React.RefObject<HTMLAudioElement>;
+  failedSoundRef: React.RefObject<HTMLAudioElement>;
+}
+
+export interface NewContactMenuProps {
+  name: string;
+  saveContact: () => void;
+  setName: React.Dispatch<React.SetStateAction<string>>;
+  number: string;
+  setNumber: React.Dispatch<React.SetStateAction<string>>;
+  cancel: () => void;
+}
+
+export interface ContactsListProps {
+  call: (arg0: string) => void;
+  sortedContacts: ContactProps[];
+  deleteContact: (contact: ContactProps, e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 export interface CallStoreProps {
@@ -26,8 +45,8 @@ export interface SipDataProps {
 
 export interface PhoneProps {
   ua: UA | null;
-  playFailedSound: () => void;
-  playButtonsSound: () => void;
+  failedSoundRef: React.RefObject<HTMLAudioElement>;
+  buttonsSoundRef: React.RefObject<HTMLAudioElement>;
 }
 
 export interface Session {
@@ -41,12 +60,12 @@ export interface Session {
 }
 
 export interface SoundProps {
-  playButtonsSound: () => void;
+  buttonsSoundRef: React.RefObject<HTMLAudioElement>;
 }
 
 export interface MainDisplayProps {
   ua: UA | null;
-  playButtonsSound: () => void;
+  buttonsSoundRef: React.RefObject<HTMLAudioElement>;
 }
 
 export interface NewRTCSessionData {
@@ -57,7 +76,6 @@ export interface NewRTCSessionData {
 export interface IncomingProps {
   ua: UA | null;
   session: Session | null;
-  playFailedSound: () => void;
 }
 
 export interface IStateData {

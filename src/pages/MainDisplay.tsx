@@ -1,14 +1,15 @@
 import { store } from '../store/store.ts';
 import { MainDisplayProps } from '../lib/interfaces.ts';
+import { playButtonsSound } from '../lib/utils/sound.ts';
 
-const MainDisplay = ({ ua, playButtonsSound }: MainDisplayProps) => {
+const MainDisplay = ({ ua, buttonsSoundRef }: MainDisplayProps) => {
   const changeCurrentPage = (page: string) => {
-    playButtonsSound();
+    playButtonsSound(buttonsSoundRef);
     store.updateStateData({ ...store.stateData, currentPage: page });
   };
 
   const logout = () => {
-    playButtonsSound();
+    playButtonsSound(buttonsSoundRef);
     ua?.unregister({ all: true });
   };
 

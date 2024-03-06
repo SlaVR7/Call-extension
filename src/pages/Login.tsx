@@ -2,8 +2,9 @@ import { FC, useEffect, useState } from 'react';
 import { LoginProps } from '../lib/interfaces.ts';
 import { Button, Input, notification } from 'antd';
 import { store } from '../store/store.ts';
+import { applySipData } from '../lib/utils/jsSipAuth.ts';
 
-const Login: FC<LoginProps> = ({ applySipData }) => {
+const Login: FC<LoginProps> = ({ setUa, setSession, buttonSoundRef, failedSoundRef }) => {
   const [api, contextHolder] = notification.useNotification();
   // поменять
   const [login, setLogin] = useState('0336445');
@@ -70,7 +71,7 @@ const Login: FC<LoginProps> = ({ applySipData }) => {
         </label>
         <Button
           className={'login-button'}
-          onClick={() => applySipData({ server, login, password, port })}
+          onClick={() => applySipData({ server, login, password, port }, setUa, setSession, buttonSoundRef, failedSoundRef)}
           type="primary"
         >
           Login
