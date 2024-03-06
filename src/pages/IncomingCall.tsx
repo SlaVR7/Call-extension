@@ -1,35 +1,24 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { store } from '../store/store.ts';
 import Stopwatch from '../components/StopWatch.tsx';
 import { Flex } from 'antd';
 import { IncomingProps } from '../lib/interfaces.ts';
 import { observer } from 'mobx-react';
 import { getName } from '../lib/utils/findInStore.ts';
+import { answer } from '../lib/utils/phone/calling.ts';
+import { stopCallSound } from '../lib/utils/sound.ts';
 
-const IncomingCall = observer(({ ua, session }: IncomingProps) => {
-  const callSoundRef = React.useRef<HTMLAudioElement>(null);
-
+const IncomingCall = observer(({ ua, session, voiceAudioRef, ringtoneRef }: IncomingProps) => {
   useEffect(() => {
-    callSoundRef.current?.play();
-  }, []);
+    ringtoneRef.current?.play();
 
-  function answer() {
-    stopCallSound();
-    store.updateStateData({ ...store.stateData, isStopWatchRunning: true });
-    store.updateStateData({ ...store.stateData, callStatus: 'In-Call' });
-    session?.answer();
-  }
-
-  const stopCallSound = () => {
-    callSoundRef.current?.pause();
-    if (callSoundRef.current?.currentTime) {
-      callSoundRef.current.currentTime = 0;
+    return () => {
+      stopCallSound(ringtoneRef);
     }
-  };
+  }, []);
 
   return (
     <div className={'incoming-container'}>
-      <audio ref={callSoundRef} src={'/sounds/ringtone.mp3'} loop={true} />
       <h1 className={'menu-title'}>Incoming call</h1>
       <div className={'incoming-data'}>
         <p>{store.stateData.number}</p>
@@ -48,7 +37,7 @@ const IncomingCall = observer(({ ua, session }: IncomingProps) => {
         </>
       ) : (
         <div className={'incoming-buttons'}>
-          <div onClick={answer} className={'ring-button ring-button-animation'}></div>
+          <div onClick={() => answer(session, voiceAudioRef, ringtoneRef)} className={'ring-button ring-button-animation'}></div>
           <div onClick={() => ua?.terminateSessions()} className={'ring-button end-button'}></div>
         </div>
       )}

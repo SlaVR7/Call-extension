@@ -2,8 +2,8 @@ import JsSIP, { UA } from 'jssip';
 import { NewRTCSessionData, Session, SipDataProps } from '../interfaces.ts';
 import { store } from '../../store/store.ts';
 import { playButtonsSound } from './sound.ts';
-import { remoteEndingCall } from './endingCall.ts';
-import React from 'react';
+import { remoteEndingCall } from './phone/endingCall.ts';
+import { Dispatch, RefObject, SetStateAction } from 'react';
 
 export const register = (sipData: SipDataProps) => {
   const { server, login, password, port } = sipData;
@@ -25,33 +25,30 @@ export const register = (sipData: SipDataProps) => {
   return null;
 };
 
-export function applySipData(sipData: SipDataProps,
-                             setUa: React.Dispatch<React.SetStateAction<UA | null>>,
-                             setSession: React.Dispatch<React.SetStateAction<Session | null>>,
-                            buttonsSoundRef: React.RefObject<HTMLAudioElement>,
-                            failedSoundRef: React.RefObject<HTMLAudioElement>,
+export function applySipData(
+  sipData: SipDataProps,
+  setUa: Dispatch<SetStateAction<UA | null>>,
+  setSession: Dispatch<SetStateAction<Session | null>>,
+  buttonsSoundRef: RefObject<HTMLAudioElement>,
+  failedSoundRef: RefObject<HTMLAudioElement>,
+  voiceAudioRef: RefObject<HTMLAudioElement>
 ) {
   playButtonsSound(buttonsSoundRef);
   store.updateSipData(sipData);
   const ua = register(sipData);
   setUa(ua);
   if (ua) {
-    ua.on('connecting', () => {
-      console.log('Подключение к серверу...');
-    });
-
-    ua.on('connected', () => {
-      console.log('Соединение установлено');
-    });
-
-    ua.on('disconnected', (data) => {
-      console.log('Соединение разорвано', data);
+    ua.on('disconnected', () => {
       store.updateStateData({ ...store.stateData, auth: false });
     });
 
     ua.on('registered', () => {
-      console.log('Успешная авторизация');
-      store.updateStateData({ ...store.stateData, auth: true, callStatus: 'On Hook' });
+      store.updateStateData({
+        ...store.stateData,
+        auth: true,
+        callStatus: 'On Hook',
+        currentPage: 'main',
+      });
       if (!localStorage.getItem(sipData.login)) {
         localStorage.setItem(sipData.login, JSON.stringify({ contacts: [], callLog: [] }));
       } else {
@@ -59,8 +56,7 @@ export function applySipData(sipData: SipDataProps,
       }
     });
 
-    ua.on('registrationFailed', (e) => {
-      console.error('Ошибка авторизации', e);
+    ua.on('registrationFailed', () => {
       store.updateStateData({ ...store.stateData, isAuthError: true });
       setTimeout(() => {
         store.updateStateData({ ...store.stateData, isAuthError: false });
@@ -68,7 +64,6 @@ export function applySipData(sipData: SipDataProps,
     });
 
     ua.on('unregistered', () => {
-      console.log('Авторизация завершена');
       store.updateStateData({ ...store.stateData, auth: false });
     });
 
@@ -79,19 +74,37 @@ export function applySipData(sipData: SipDataProps,
 
       if (originator === 'remote') {
         setSession(session);
-        store.updateStateData({ ...store.stateData, isIncomingCall: true });
         const incomingNumber = session.remote_identity.uri.user;
-        store.updateStateData({ ...store.stateData, number: incomingNumber });
-        store.updateStateData({ ...store.stateData, callStatus: 'Incoming call...' });
-        store.updateStateData({ ...store.stateData, currentPage: 'incoming' });
+        store.updateStateData({
+          ...store.stateData,
+          isIncomingCall: true,
+          number: incomingNumber,
+          callStatus: 'Incoming call...',
+          currentPage: 'incoming',
+        });
 
         session.on('failed', () => {
-          console.log('Звонок завершен');
           remoteEndingCall(true, incomingNumber, failedSoundRef);
         });
+
         session.on('ended', () => {
-          console.log('endedDDDDD');
           remoteEndingCall(false, incomingNumber, failedSoundRef);
+        });
+
+        session.on('confirmed', () => {
+          store.updateStateData({
+            ...store.stateData,
+            isStopWatchRunning: true,
+            callStatus: 'In-Call',
+          });
+        });
+      }
+
+      if (session.connection) {
+        session.connection.addEventListener('track', function (e) {
+          if (e.streams && e.streams[0] && voiceAudioRef.current) {
+            voiceAudioRef.current.srcObject = e.streams[0];
+          }
         });
       }
     });

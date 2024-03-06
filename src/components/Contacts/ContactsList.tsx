@@ -1,7 +1,7 @@
 import { Flex } from 'antd';
 import { ContactsListProps } from '../../lib/interfaces.ts';
 
-const ContactsList = ({call, sortedContacts, deleteContact}: ContactsListProps) => {
+const ContactsList = ({ call, sortedContacts, deleteContact }: ContactsListProps) => {
   return (
     <ul className={'calls-list'}>
       {sortedContacts.map((contact, index) => {
@@ -13,10 +13,7 @@ const ContactsList = ({call, sortedContacts, deleteContact}: ContactsListProps) 
               <p className={'calls-number'}>{contact.number}</p>
               <div>
                 <button className={'contact-button'}>Call</button>
-                <button
-                  onClick={(e) => deleteContact(contact, e)}
-                  className={'contact-button'}
-                >
+                <button onClick={(e) => deleteContact(contact, e)} className={'contact-button'}>
                   Delete
                 </button>
               </div>

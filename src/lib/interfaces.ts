@@ -1,20 +1,21 @@
 import { UA } from 'jssip';
 import { RTCSessionEventMap } from 'jssip/lib/RTCSession';
-import React from 'react';
+import React, { Dispatch, RefObject, SetStateAction } from 'react';
 
 export interface LoginProps {
-  setUa: React.Dispatch<React.SetStateAction<UA | null>>
-  setSession: React.Dispatch<React.SetStateAction<Session | null>>;
-  buttonSoundRef: React.RefObject<HTMLAudioElement>;
-  failedSoundRef: React.RefObject<HTMLAudioElement>;
+  setUa: Dispatch<SetStateAction<UA | null>>;
+  setSession: Dispatch<SetStateAction<Session | null>>;
+  buttonSoundRef: RefObject<HTMLAudioElement>;
+  failedSoundRef: RefObject<HTMLAudioElement>;
+  voiceAudioRef: RefObject<HTMLAudioElement>;
 }
 
 export interface NewContactMenuProps {
   name: string;
   saveContact: () => void;
-  setName: React.Dispatch<React.SetStateAction<string>>;
+  setName: Dispatch<SetStateAction<string>>;
   number: string;
-  setNumber: React.Dispatch<React.SetStateAction<string>>;
+  setNumber: Dispatch<SetStateAction<string>>;
   cancel: () => void;
 }
 
@@ -45,11 +46,16 @@ export interface SipDataProps {
 
 export interface PhoneProps {
   ua: UA | null;
-  failedSoundRef: React.RefObject<HTMLAudioElement>;
-  buttonsSoundRef: React.RefObject<HTMLAudioElement>;
+  failedSoundRef: RefObject<HTMLAudioElement>;
+  buttonsSoundRef: RefObject<HTMLAudioElement>;
+  numbersSoundRef: RefObject<HTMLAudioElement>;
+  callSoundRef: RefObject<HTMLAudioElement>;
 }
 
 export interface Session {
+  connection: {
+    addEventListener: (arg0: string, arg1: (e: {streams: MediaProvider[] | null[]}) => void) => void;
+  };
   remote_identity: {
     uri: {
       user: string;
@@ -60,12 +66,12 @@ export interface Session {
 }
 
 export interface SoundProps {
-  buttonsSoundRef: React.RefObject<HTMLAudioElement>;
+  buttonsSoundRef: RefObject<HTMLAudioElement>;
 }
 
 export interface MainDisplayProps {
   ua: UA | null;
-  buttonsSoundRef: React.RefObject<HTMLAudioElement>;
+  buttonsSoundRef: RefObject<HTMLAudioElement>;
 }
 
 export interface NewRTCSessionData {
@@ -76,6 +82,8 @@ export interface NewRTCSessionData {
 export interface IncomingProps {
   ua: UA | null;
   session: Session | null;
+  voiceAudioRef: RefObject<HTMLAudioElement>;
+  ringtoneRef: RefObject<HTMLAudioElement>;
 }
 
 export interface IStateData {
@@ -88,4 +96,5 @@ export interface IStateData {
   isStopWatchRunning: boolean;
   callStatus: string;
   callDuration: string;
+  callPossibility: boolean;
 }

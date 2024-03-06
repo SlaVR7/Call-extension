@@ -5,4 +5,4 @@ import Contacts from './Contacts.tsx';
 import Login from './Login.tsx';
 import CallLog from './CallLog.tsx';
 
-export {Phone, Login, MainDisplay, IncomingCall, CallLog, Contacts}
+export { Phone, Login, MainDisplay, IncomingCall, CallLog, Contacts };

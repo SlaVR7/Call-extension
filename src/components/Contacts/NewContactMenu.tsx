@@ -1,7 +1,14 @@
 import { Button, Flex, Input } from 'antd';
 import { NewContactMenuProps } from '../../lib/interfaces.ts';
 
-const NewContactMenu = ({name, saveContact, setName, number, setNumber, cancel}: NewContactMenuProps) => {
+const NewContactMenu = ({
+  name,
+  saveContact,
+  setName,
+  number,
+  setNumber,
+  cancel,
+}: NewContactMenuProps) => {
   return (
     <form className={'new-contact-form'} onSubmit={saveContact}>
       <label htmlFor="name">Name:</label>
@@ -25,11 +32,9 @@ const NewContactMenu = ({name, saveContact, setName, number, setNumber, cancel}:
         className={'new-contact-input'}
         value={number}
         onChange={(e) => {
-          console.log('onChanfe');
           if (!isNaN(+e.target.value) && number.length < 14) setNumber(e.target.value);
         }}
         onKeyDown={(e) => {
-          console.log('onKetDown');
           if (e.key === 'Backspace' && number.length === 14) {
             setNumber((prevValue) => prevValue.slice(0, 13));
             e.preventDefault();

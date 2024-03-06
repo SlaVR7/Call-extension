@@ -4,15 +4,19 @@ import { getName } from '../lib/utils/findInStore.ts';
 import { observer } from 'mobx-react';
 import { SoundProps } from '../lib/interfaces.ts';
 import { playButtonsSound } from '../lib/utils/sound.ts';
+import { useEffect } from 'react';
 
 const CallLog = observer(({ buttonsSoundRef }: SoundProps) => {
   const calls = store.callsAndContacts.calls;
   const reversedCalls = [...calls].reverse();
 
+  useEffect(() => {
+    store.updateStateData({ ...store.stateData, callPossibility: true });
+  }, []);
+
   function toPhone(number: string) {
     playButtonsSound(buttonsSoundRef);
-    store.updateStateData({ ...store.stateData, number });
-    store.updateStateData({ ...store.stateData, currentPage: 'phone' });
+    store.updateStateData({ ...store.stateData, number, currentPage: 'phone' });
   }
 
   function clear() {

@@ -13,6 +13,7 @@ const storeModel = types
       isStopWatchRunning: types.boolean,
       callStatus: types.string,
       callDuration: types.string,
+      callPossibility: types.boolean,
     }),
     sipData: types.model({
       server: types.string,
@@ -73,7 +74,7 @@ export const store = storeModel.create({
     contacts: JSON.parse(localStorage.getItem('contacts') || '[]'),
   },
   stateData: {
-    currentPage: 'main',
+    currentPage: 'login',
     auth: false,
     isAuthError: false,
     isIncomingCall: false,
@@ -82,6 +83,7 @@ export const store = storeModel.create({
     isStopWatchRunning: false,
     callStatus: 'Disconnected',
     callDuration: '00:00:00',
+    callPossibility: false,
   },
   sipData: {
     server: '',

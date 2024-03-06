@@ -14,6 +14,7 @@ const Contacts = observer(({ buttonsSoundRef }: SoundProps) => {
   const [number, setNumber] = useState('');
 
   useEffect(() => {
+    store.updateStateData({ ...store.stateData, callPossibility: true });
     if (store.stateData.number) {
       setIsNewContactMenuActive(true);
       setNumber(store.stateData.number);
@@ -43,20 +44,21 @@ const Contacts = observer(({ buttonsSoundRef }: SoundProps) => {
 
   function call(number: string) {
     playButtonsSound(buttonsSoundRef);
-    store.updateStateData({ ...store.stateData, number });
-    store.updateStateData({ ...store.stateData, currentPage: 'phone' });
+    store.updateStateData({ ...store.stateData, number, currentPage: 'phone' });
   }
 
   return (
     <>
       <h1 className={'menu-title'}>Contacts</h1>
       {isNewContactMenuActive ? (
-        <NewContactMenu saveContact={saveContact}
-                        number={number}
-                        setNumber={setNumber}
-                        cancel={cancel}
-                        setName={setName}
-                        name={name} />
+        <NewContactMenu
+          saveContact={saveContact}
+          number={number}
+          setNumber={setNumber}
+          cancel={cancel}
+          setName={setName}
+          name={name}
+        />
       ) : (
         <>
           <ContactsList call={call} sortedContacts={sortedContacts} deleteContact={deleteContact} />

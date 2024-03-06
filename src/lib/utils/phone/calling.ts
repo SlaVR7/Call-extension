@@ -1,38 +1,51 @@
 import { store } from '../../../store/store.ts';
 import { playButtonsSound, playFailedSound, stopCallSound } from '../sound.ts';
-import { endCall } from '../endingCall.ts';
+import { endCall } from './endingCall.ts';
 import { UA } from 'jssip';
-import React from 'react';
+import { RefObject } from 'react';
+import { Session } from '../../interfaces.ts';
 
-export function call(ua: UA | null,
-                     buttonsSoundRef: React.RefObject<HTMLAudioElement>,
-                     callSoundRef: React.RefObject<HTMLAudioElement>,
-                     failedSoundRef: React.RefObject<HTMLAudioElement>,
+export function answer(session: Session | null, voiceAudioRef: RefObject<HTMLAudioElement>, callSoundRef: RefObject<HTMLAudioElement>) {
+  stopCallSound(callSoundRef);
+  session?.answer();
+
+  if (session?.connection) {
+    session.connection.addEventListener('track', function (e) {
+      if (e.streams && e.streams[0] && voiceAudioRef.current) {
+        voiceAudioRef.current.srcObject = e.streams[0];
+      }
+    });
+  }
+}
+
+export function call(
+  ua: UA | null,
+  buttonsSoundRef: RefObject<HTMLAudioElement>,
+  callSoundRef: RefObject<HTMLAudioElement>,
+  failedSoundRef: RefObject<HTMLAudioElement>
 ) {
   if (store.stateData.number.length === 0) return;
   playButtonsSound(buttonsSoundRef);
-  store.updateStateData({ ...store.stateData, isCalling: true });
-  store.updateStateData({ ...store.stateData, callStatus: 'Dealing...' });
+  store.updateStateData({ ...store.stateData, isCalling: true, callStatus: 'Dealing...' });
 
   const eventHandlers = {
     progress: function () {
-      console.log('progress');
       callSoundRef.current?.play();
     },
     failed: function () {
-      console.log('failed');
       stopCallSound(callSoundRef);
       playFailedSound(failedSoundRef);
       endCall(ua);
     },
     confirmed: function () {
-      console.log('confirmed');
       stopCallSound(callSoundRef);
-      store.updateStateData({ ...store.stateData, callStatus: 'In-Call' });
-      store.updateStateData({ ...store.stateData, isStopWatchRunning: true });
+      store.updateStateData({
+        ...store.stateData,
+        callStatus: 'In-Call',
+        isStopWatchRunning: true,
+      });
     },
     ended: function () {
-      console.log('ended');
       playFailedSound(failedSoundRef);
       endCall(ua);
     },

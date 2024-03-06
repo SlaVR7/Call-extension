@@ -1,14 +1,20 @@
 import { store } from '../store/store.ts';
 import { MainDisplayProps } from '../lib/interfaces.ts';
 import { playButtonsSound } from '../lib/utils/sound.ts';
+import { useEffect } from 'react';
 
 const MainDisplay = ({ ua, buttonsSoundRef }: MainDisplayProps) => {
+  useEffect(() => {
+    store.updateStateData({ ...store.stateData, callPossibility: false });
+  }, []);
+
   const changeCurrentPage = (page: string) => {
     playButtonsSound(buttonsSoundRef);
     store.updateStateData({ ...store.stateData, currentPage: page });
   };
 
   const logout = () => {
+    store.updateStateData({...store.stateData, callStatus: 'Disconnected'});
     playButtonsSound(buttonsSoundRef);
     ua?.unregister({ all: true });
   };
