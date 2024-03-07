@@ -8,10 +8,10 @@ import { observer } from 'mobx-react';
 const Login: FC<LoginProps> = observer(
   ({ setUa, setSession, buttonSoundRef, failedSoundRef, voiceAudioRef }) => {
     const [api, contextHolder] = notification.useNotification();
-    const [login, setLogin] = useState('0336445');
-    const [password, setPassword] = useState('id49rvgNRL');
-    const [server, setServer] = useState('voip.uiscom.ru');
-    const [port, setPort] = useState('9050');
+    const [login, setLogin] = useState('');
+    const [password, setPassword] = useState('');
+    const [server, setServer] = useState('');
+    const [port, setPort] = useState('');
 
     const openNotification = () => {
       api.error({
