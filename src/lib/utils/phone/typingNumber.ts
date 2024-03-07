@@ -42,13 +42,12 @@ export const handleKeyPress = (
   numbersSoundRef: React.RefObject<HTMLAudioElement>,
   ua: UA | null,
   buttonsSoundRef: React.RefObject<HTMLAudioElement>,
-  callSoundRef: React.RefObject<HTMLAudioElement>,
   failedSoundRef: React.RefObject<HTMLAudioElement>
 ) => {
   if (e.key === 'Enter' && !store.stateData.isCalling && store.stateData.number.length > 0)
-    call(ua, buttonsSoundRef, callSoundRef, failedSoundRef);
+    call(ua, buttonsSoundRef, failedSoundRef);
   if (e.key === 'Backspace' && store.stateData.isCalling)
-    call(ua, buttonsSoundRef, callSoundRef, failedSoundRef);
+    call(ua, buttonsSoundRef, failedSoundRef);
   if (e.key === 'Backspace' && !store.stateData.isCalling) deleteNumber(numbersSoundRef);
   if (
     isNaN(+e.key) ||

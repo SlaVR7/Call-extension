@@ -6,14 +6,14 @@ import { IncomingProps } from '../lib/interfaces.ts';
 import { observer } from 'mobx-react';
 import { getName } from '../lib/utils/findInStore.ts';
 import { answer } from '../lib/utils/phone/calling.ts';
-import { stopCallSound } from '../lib/utils/sound.ts';
+import { stopSound } from '../lib/utils/sound.ts';
 
 const IncomingCall = observer(({ ua, session, voiceAudioRef, ringtoneRef }: IncomingProps) => {
   useEffect(() => {
     ringtoneRef.current?.play();
 
     return () => {
-      stopCallSound(ringtoneRef);
+      stopSound(ringtoneRef);
     }
   }, []);
 

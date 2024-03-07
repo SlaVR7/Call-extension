@@ -49,7 +49,6 @@ export interface PhoneProps {
   failedSoundRef: RefObject<HTMLAudioElement>;
   buttonsSoundRef: RefObject<HTMLAudioElement>;
   numbersSoundRef: RefObject<HTMLAudioElement>;
-  callSoundRef: RefObject<HTMLAudioElement>;
 }
 
 export interface Session {

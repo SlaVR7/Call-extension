@@ -1,9 +1,9 @@
 import { RefObject } from 'react';
 
-export function stopCallSound(callSoundRef: RefObject<HTMLAudioElement>) {
-  callSoundRef.current?.pause();
-  if (callSoundRef.current?.currentTime) {
-    callSoundRef.current.currentTime = 0;
+export function stopSound(soundRef: RefObject<HTMLAudioElement>) {
+  soundRef.current?.pause();
+  if (soundRef.current?.currentTime) {
+    soundRef.current.currentTime = 0;
   }
 }
 

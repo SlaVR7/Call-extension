@@ -1,12 +1,12 @@
 import { store } from '../../../store/store.ts';
-import { playButtonsSound, playFailedSound, stopCallSound } from '../sound.ts';
+import { playButtonsSound, playFailedSound, stopSound } from '../sound.ts';
 import { endCall } from './endingCall.ts';
 import { UA } from 'jssip';
 import { RefObject } from 'react';
 import { Session } from '../../interfaces.ts';
 
-export function answer(session: Session | null, voiceAudioRef: RefObject<HTMLAudioElement>, callSoundRef: RefObject<HTMLAudioElement>) {
-  stopCallSound(callSoundRef);
+export function answer(session: Session | null, voiceAudioRef: RefObject<HTMLAudioElement>, ringtoneSoundRef: RefObject<HTMLAudioElement>) {
+  stopSound(ringtoneSoundRef);
   session?.answer();
 
   if (session?.connection) {
@@ -21,7 +21,6 @@ export function answer(session: Session | null, voiceAudioRef: RefObject<HTMLAud
 export function call(
   ua: UA | null,
   buttonsSoundRef: RefObject<HTMLAudioElement>,
-  callSoundRef: RefObject<HTMLAudioElement>,
   failedSoundRef: RefObject<HTMLAudioElement>
 ) {
   if (store.stateData.number.length === 0) return;
@@ -29,16 +28,11 @@ export function call(
   store.updateStateData({ ...store.stateData, isCalling: true, callStatus: 'Dealing...' });
 
   const eventHandlers = {
-    progress: function () {
-      callSoundRef.current?.play();
-    },
     failed: function () {
-      stopCallSound(callSoundRef);
       playFailedSound(failedSoundRef);
       endCall(ua);
     },
     confirmed: function () {
-      stopCallSound(callSoundRef);
       store.updateStateData({
         ...store.stateData,
         callStatus: 'In-Call',

@@ -9,11 +9,11 @@ import { addContact, addNumber, deleteNumber } from '../lib/utils/phone/typingNu
 import { call } from '../lib/utils/phone/calling.ts';
 
 const Phone = observer(
-  ({ ua, failedSoundRef, buttonsSoundRef, callSoundRef, numbersSoundRef }: PhoneProps) => {
+  ({ ua, failedSoundRef, buttonsSoundRef, numbersSoundRef }: PhoneProps) => {
     useEffect(() => {
       if (store.stateData.number && store.stateData.callPossibility)
-        call(ua, buttonsSoundRef, callSoundRef, failedSoundRef);
-    }, [buttonsSoundRef, callSoundRef, failedSoundRef, ua]);
+        call(ua, buttonsSoundRef, failedSoundRef);
+    }, [buttonsSoundRef, failedSoundRef, ua]);
 
     return (
       <>
@@ -51,7 +51,7 @@ const Phone = observer(
               ></div>
             ) : (
               <div
-                onClick={() => call(ua, buttonsSoundRef, callSoundRef, failedSoundRef)}
+                onClick={() => call(ua, buttonsSoundRef, failedSoundRef)}
                 className={'ring-button'}
               ></div>
             )}

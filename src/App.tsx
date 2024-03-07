@@ -13,7 +13,6 @@ const App = observer(() => {
   const [ua, setUa] = useState<UA | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const currentPage = store.stateData.currentPage;
-  const callSoundRef = useRef<HTMLAudioElement>(null);
   const numbersSoundRef = useRef<HTMLAudioElement>(null);
   const buttonsSoundRef = useRef<HTMLAudioElement>(null);
   const failedSoundRef = useRef<HTMLAudioElement>(null);
@@ -24,7 +23,7 @@ const App = observer(() => {
     if (['main', 'phone'].includes(store.stateData.currentPage)) {
       if (store.stateData.currentPage === 'main')
         store.updateStateData({ ...store.stateData, currentPage: 'phone' });
-      return handleKeyPress(e, numbersSoundRef, ua, buttonsSoundRef, callSoundRef, failedSoundRef);
+      return handleKeyPress(e, numbersSoundRef, ua, buttonsSoundRef, failedSoundRef);
     }
     if (store.stateData.currentPage === 'incoming') {
       if (e.key === 'Backspace') ua?.terminateSessions();
@@ -48,7 +47,6 @@ const App = observer(() => {
         <audio ref={failedSoundRef} src={'/sounds/failed.mp3'} loop={true} />
         <audio ref={buttonsSoundRef} src={'/sounds/button.mp3'} />
         <audio ref={ringtoneRef} src={'/sounds/ringtone.mp3'} loop={true} />
-        <audio ref={callSoundRef} src={'/sounds/ringing.mp3'} loop={true} />
         <audio ref={numbersSoundRef} src={'/sounds/numbers.mp3'} />
         {store.stateData.auth ? (
           <>
@@ -58,7 +56,6 @@ const App = observer(() => {
                 ua={ua}
                 failedSoundRef={failedSoundRef}
                 buttonsSoundRef={buttonsSoundRef}
-                callSoundRef={callSoundRef}
                 numbersSoundRef={numbersSoundRef}
               />
             )}
