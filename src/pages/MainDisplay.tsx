@@ -14,7 +14,7 @@ const MainDisplay = ({ ua, buttonsSoundRef }: MainDisplayProps) => {
   };
 
   const logout = () => {
-    store.updateStateData({...store.stateData, callStatus: 'Disconnected'});
+    store.updateStateData({...store.stateData, callStatus: 'Disconnected', currentPage: 'login'});
     playButtonsSound(buttonsSoundRef);
     ua?.unregister({ all: true });
   };

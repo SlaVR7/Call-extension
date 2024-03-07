@@ -20,7 +20,7 @@ const Login: FC<LoginProps> = observer(
         placement: 'topLeft',
       });
     };
-
+    console.log(store.stateData.currentPage);
     useEffect(() => {
       if (store.stateData.isAuthError) openNotification();
     }, [store.stateData.isAuthError]);
