@@ -12,4 +12,4 @@ To run this project locally, follow these steps:
 
 To launch the extension, run 'npm run build', add manifest.json and icon folder into dist and upload dist to chrome://extensions/
 
-https://internship-task2-gdfjgcbzm-mylife0793-gmailcom.vercel.app/
+https://call-extension-8d4ap8z92-mylife0793-gmailcom.vercel.app/
