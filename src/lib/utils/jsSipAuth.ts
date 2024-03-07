@@ -50,6 +50,8 @@ export function applySipData(
         currentPage: 'main',
       });
       if (!localStorage.getItem(sipData.login)) {
+        store.clearContacts();
+        store.clearCallLog();
         localStorage.setItem(sipData.login, JSON.stringify({ contacts: [], callLog: [] }));
       } else {
         store.setCallsAndContacts(localStorage.getItem(sipData.login));

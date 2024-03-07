@@ -48,6 +48,9 @@ const storeModel = types
     addContact(contact: ContactProps) {
       self.callsAndContacts.contacts.push(contact);
     },
+    clearContacts() {
+      self.callsAndContacts.contacts.clear();
+    },
     deleteContact(contact: ContactProps) {
       const targetStoreContact = self.callsAndContacts.contacts.find(
         (storeContact) => storeContact === contact
@@ -66,12 +69,13 @@ const storeModel = types
     setCallsAndContacts(data: string | null) {
       if (data) self.callsAndContacts = JSON.parse(data);
     },
+
   }));
 
 export const store = storeModel.create({
   callsAndContacts: {
-    calls: JSON.parse(localStorage.getItem('calls') || '[]'),
-    contacts: JSON.parse(localStorage.getItem('contacts') || '[]'),
+    calls: [],
+    contacts: [],
   },
   stateData: {
     currentPage: 'login',
