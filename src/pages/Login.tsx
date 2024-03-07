@@ -17,7 +17,7 @@ const Login: FC<LoginProps> = observer(
       api.error({
         message: `Authorization error!`,
         description: 'Please check the entered data',
-        placement: 'top',
+        placement: 'topLeft',
       });
     };
 
