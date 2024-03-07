@@ -10,6 +10,6 @@ To run this project locally, follow these steps:
 
 ## Deployment
 
-To launch the extension, run 'npm run build', upload files to chrome://extensions/
+To launch the extension, run 'npm run build', add manifest.json and icon folder into dist and upload dist to chrome://extensions/
 
 https://internship-task2-gdfjgcbzm-mylife0793-gmailcom.vercel.app/
