@@ -47,7 +47,7 @@ export const handleKeyPress = (
 ) => {
   if (e.key === 'Enter' && !store.stateData.isCalling && store.stateData.number.length > 0)
     call(ua, buttonsSoundRef, callSoundRef, failedSoundRef);
-  if (e.key === 'Escape' && store.stateData.isCalling)
+  if (e.key === 'Backspace' && store.stateData.isCalling)
     call(ua, buttonsSoundRef, callSoundRef, failedSoundRef);
   if (e.key === 'Backspace' && !store.stateData.isCalling) deleteNumber(numbersSoundRef);
   if (

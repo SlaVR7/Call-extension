@@ -27,7 +27,7 @@ const App = observer(() => {
       return handleKeyPress(e, numbersSoundRef, ua, buttonsSoundRef, callSoundRef, failedSoundRef);
     }
     if (store.stateData.currentPage === 'incoming') {
-      if (e.key === 'Escape') ua?.terminateSessions();
+      if (e.key === 'Backspace') ua?.terminateSessions();
       if (e.key === 'Enter') answer(session, voiceAudioRef, ringtoneRef);
     }
   };
