@@ -4,6 +4,7 @@ import { CallNumbers } from '../../enum.ts';
 import { playButtonsSound, playNumberClick } from '../sound.ts';
 import { call } from './calling.ts';
 import { UA } from 'jssip';
+import { endCall } from './endingCall.ts';
 
 export const addNumber = (
   e: React.MouseEvent<HTMLDivElement>,
@@ -47,7 +48,7 @@ export const handleKeyPress = (
   if (e.key === 'Enter' && !store.stateData.isCalling && store.stateData.number.length > 0)
     call(ua, buttonsSoundRef, failedSoundRef);
   if (e.key === 'Backspace' && store.stateData.isCalling)
-    call(ua, buttonsSoundRef, failedSoundRef);
+    endCall(ua);
   if (e.key === 'Backspace' && !store.stateData.isCalling) deleteNumber(numbersSoundRef);
   if (
     isNaN(+e.key) ||

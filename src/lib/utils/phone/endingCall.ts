@@ -8,6 +8,13 @@ export function remoteEndingCall(
   incomingNumber: string,
   failedSoundRef: React.RefObject<HTMLAudioElement>
 ) {
+  store.addNumber({
+    date: new Date().toLocaleString(),
+    number: incomingNumber,
+    duration: store.stateData.callDuration,
+    type: isFailed ? 'missed' : 'incoming',
+  });
+  localStorage.setItem(store.sipData.login, JSON.stringify(store.callsAndContacts));
   store.updateStateData({
     ...store.stateData,
     isIncomingCall: false,
@@ -18,13 +25,6 @@ export function remoteEndingCall(
     currentPage: 'main',
     callDuration: '00:00:00',
   });
-  store.addNumber({
-    date: new Date().toLocaleString(),
-    number: incomingNumber,
-    duration: store.stateData.callDuration,
-    type: isFailed ? 'missed' : 'incoming',
-  });
-  localStorage.setItem(store.sipData.login, JSON.stringify(store.callsAndContacts));
   playFailedSound(failedSoundRef);
   setTimeout(() => {
     store.updateStateData({ ...store.stateData, callStatus: 'On Hook' });
@@ -32,7 +32,7 @@ export function remoteEndingCall(
 }
 
 export function endCall(ua: UA | null) {
-  ua?.terminateSessions();
+  if (!store.stateData.isCalling) return;
   store.addNumber({
     date: new Date().toLocaleString(),
     number: store.stateData.number,
@@ -46,7 +46,9 @@ export function endCall(ua: UA | null) {
     callStatus: 'Call ended',
     number: '',
     isCalling: false,
+    callDuration: '00:00:00'
   });
+  ua?.terminateSessions();
   setTimeout(() => {
     store.updateStateData({ ...store.stateData, callStatus: 'On Hook' });
   }, 2000);
