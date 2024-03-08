@@ -56,6 +56,7 @@ export function applySipData(
       } else {
         store.setCallsAndContacts(localStorage.getItem(sipData.login));
       }
+      localStorage.setItem('sipData', JSON.stringify(store.sipData));
     });
 
     ua.on('registrationFailed', () => {
@@ -67,6 +68,7 @@ export function applySipData(
 
     ua.on('unregistered', () => {
       store.updateStateData({ ...store.stateData, auth: false });
+      localStorage.removeItem('sipData');
     });
 
     ua.start();
